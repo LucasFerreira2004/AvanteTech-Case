@@ -1,4 +1,4 @@
-package categoria;
+package com.example.demo.categoria;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

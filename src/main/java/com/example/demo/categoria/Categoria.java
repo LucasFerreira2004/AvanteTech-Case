@@ -1,4 +1,4 @@
-package categoria;
+package com.example.demo.categoria;
 
 import jakarta.persistence.*;
 import lombok.Data;
