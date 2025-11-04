@@ -4,6 +4,8 @@ import com.example.demo.categoria.dto.CategoriaRegisterDTO;
 import com.example.demo.categoria.dto.CategoriaResponseDTO;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +21,14 @@ public class CategoriaController {
         return ResponseEntity.ok(response);
     }
     @GetMapping
-    public ResponseEntity<Object> findAll(){
-        return  ResponseEntity.ok("ola mundo");
+    public ResponseEntity<Page<CategoriaResponseDTO>> findAllCategoria(Pageable pageable){
+        Page<CategoriaResponseDTO> page = categoriaService.findAll(pageable);
+        return  ResponseEntity.ok(page);
+    }
+
+    @PutMapping("/{categoriaId}")
+    public ResponseEntity<CategoriaResponseDTO> updateCategoria(@RequestBody @Valid CategoriaRegisterDTO dto, @PathVariable Long categoriaId){
+        CategoriaResponseDTO response = categoriaService.update(dto, categoriaId);
+        return ResponseEntity.ok(response);
     }
 }

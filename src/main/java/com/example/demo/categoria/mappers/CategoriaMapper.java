@@ -14,6 +14,15 @@ public class CategoriaMapper {
         categoria.setNome(dto.nome());
         return categoria;
     }
+
+    public Categoria toEntity(CategoriaRegisterDTO dto, Long id){
+        Categoria categoria = new Categoria();
+        categoria.setId(id);
+        categoria.setDescricao(dto.descricao());
+        categoria.setNome(dto.nome());
+        return categoria;
+    }
+
     public CategoriaResponseDTO toResponseDto(Categoria categoria){
         CategoriaResponseDTO dto = new CategoriaResponseDTO(categoria.getId(),  categoria.getDescricao(), categoria.getNome());
         return dto;
