@@ -16,7 +16,7 @@ public class ProdutoMapper {
         produto.setDescricao(dto.descricao());
         produto.setPreco(dto.preco());
         produto.setCategoria(categoria);
-
+        produto.setAtivo(true);
         return produto;
     }
 
@@ -27,7 +27,7 @@ public class ProdutoMapper {
         produto.setDescricao(dto.descricao());
         produto.setPreco(dto.preco());
         produto.setCategoria(categoria);
-
+        produto.setAtivo(true);
         return produto;
     }
 

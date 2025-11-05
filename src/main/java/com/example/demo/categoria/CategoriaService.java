@@ -18,6 +18,8 @@ public class CategoriaService {
     private CategoriaRepository categoriaRepository;
     @Autowired
     private CategoriaMapper categoriaMapper;
+    @Autowired
+    private CategoriaValidationService categoriaValidationService;
 
     public CategoriaResponseDTO save(CategoriaRegisterDTO dto) {
         Categoria categoria = categoriaMapper.toEntity(dto);
@@ -32,10 +34,8 @@ public class CategoriaService {
 
     @Transactional
     public CategoriaResponseDTO update(CategoriaRegisterDTO dto, Long categoriaId) {
-        Optional<Categoria> categoria = categoriaRepository.findById(categoriaId);
-        if (categoria.isEmpty()){
-            throw new ResourceNotFoundException("categoria");
-        }
+        categoriaValidationService.validateCategoriaExists(categoriaId);
+
         Categoria categoriaUpdate = categoriaMapper.toEntity(dto, categoriaId);
         categoriaRepository.save(categoriaUpdate);
         return categoriaMapper.toResponseDto(categoriaUpdate);
@@ -43,10 +43,7 @@ public class CategoriaService {
 
     @Transactional
     public void softDelete(Long categoriaId) {
-        Optional<Categoria> categoria = categoriaRepository.findByIdAndAtivoTrue(categoriaId);
-        if (categoria.isEmpty()){
-            throw new ResourceNotFoundException("categoria");
-        }
+        categoriaValidationService.validateCategoriaExists(categoriaId);
         categoriaRepository.softDelete(categoriaId);
     }
 }

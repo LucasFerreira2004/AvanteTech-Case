@@ -1,8 +1,8 @@
 package com.example.demo.produto;
 
-import com.example.demo.categoria.CategoriaService;
-import com.example.demo.categoria.dtos.CategoriaRegisterDTO;
-import com.example.demo.categoria.dtos.CategoriaResponseDTO;
+import com.example.demo.produto.ProdutoService;
+import com.example.demo.produto.dtos.ProdutoRegisterDTO;
+import com.example.demo.produto.dtos.ProdutoResponseDTO;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,31 +12,31 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/categorias")
+@RequestMapping("/produtos")
 public class ProdutoController {
     @Autowired
-    private CategoriaService categoriaService;
+    private ProdutoService produtoService;
 
     @PostMapping
-    public ResponseEntity<CategoriaResponseDTO> saveCategoria(@RequestBody @Valid CategoriaRegisterDTO dto){
-        CategoriaResponseDTO response = categoriaService.save(dto);
+    public ResponseEntity<ProdutoResponseDTO> saveProduto(@RequestBody @Valid ProdutoRegisterDTO dto){
+        ProdutoResponseDTO response = produtoService.save(dto);
         return ResponseEntity.ok(response);
     }
     @GetMapping
-    public ResponseEntity<PagedModel<CategoriaResponseDTO>> findAllCategoria(Pageable pageable){
-        Page<CategoriaResponseDTO> page = categoriaService.findAll(pageable);
+    public ResponseEntity<PagedModel<ProdutoResponseDTO>> findAllProduto(Pageable pageable){
+        Page<ProdutoResponseDTO> page = produtoService.findAll(pageable);
         return ResponseEntity.ok( new PagedModel<>(page));
     }
 
-    @PutMapping("/{categoriaId}")
-    public ResponseEntity<CategoriaResponseDTO> updateCategoria(@RequestBody @Valid CategoriaRegisterDTO dto, @PathVariable Long categoriaId){
-        CategoriaResponseDTO response = categoriaService.update(dto, categoriaId);
+    @PutMapping("/{produtoId}")
+    public ResponseEntity<ProdutoResponseDTO> updateProduto(@RequestBody @Valid ProdutoRegisterDTO dto, @PathVariable Long produtoId){
+        ProdutoResponseDTO response = produtoService.update(dto, produtoId);
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/{categoriaId}")
-    public ResponseEntity<CategoriaResponseDTO> softDeleteCategoria(@PathVariable Long categoriaId){
-        categoriaService.softDelete(categoriaId);
+    @DeleteMapping("/{produtoId}")
+    public ResponseEntity<ProdutoResponseDTO> softDeleteProduto(@PathVariable Long produtoId){
+        produtoService.softDelete(produtoId);
         return ResponseEntity.ok().build();
     }
 }

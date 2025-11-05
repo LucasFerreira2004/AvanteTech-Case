@@ -13,7 +13,6 @@ import java.math.BigDecimal;
 @Data
 @NoArgsConstructor
 @Entity
-@FilterDef(name = "ativoFilter", parameters = @ParamDef(name = "ativo", type = Boolean.class))
 @Filter(name = "ativoFilter", condition = "ativo = :ativo")
 public class Produto {
     @Id
@@ -29,6 +28,10 @@ public class Produto {
     @Column(nullable = false)
     private BigDecimal preco;
 
+    @Column(nullable = false)
+    private Boolean ativo;
+
     @ManyToOne
     private Categoria categoria;
+
 }

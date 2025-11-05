@@ -36,7 +36,7 @@ public class GlobalExceptionHandler {
                 HttpStatus.NOT_FOUND.getReasonPhrase()
         );
 
-        return ResponseEntity.badRequest().body(error);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 }
 
