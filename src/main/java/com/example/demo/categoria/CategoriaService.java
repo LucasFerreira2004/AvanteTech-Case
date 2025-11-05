@@ -1,18 +1,15 @@
 package com.example.demo.categoria;
 
-import com.example.demo.categoria.dto.CategoriaRegisterDTO;
-import com.example.demo.categoria.dto.CategoriaResponseDTO;
+import com.example.demo.categoria.dtos.CategoriaRegisterDTO;
+import com.example.demo.categoria.dtos.CategoriaResponseDTO;
 import com.example.demo.categoria.mappers.CategoriaMapper;
 import com.example.demo.shared.globalExceptions.ResourceNotFoundException;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PagedModel;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service

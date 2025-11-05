@@ -1,4 +1,4 @@
-package com.example.demo.categoria.dto;
+package com.example.demo.categoria.dtos;
 
 public record CategoriaResponseDTO(
    Long id,

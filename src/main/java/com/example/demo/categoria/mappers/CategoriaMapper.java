@@ -1,9 +1,8 @@
 package com.example.demo.categoria.mappers;
 
 import com.example.demo.categoria.Categoria;
-import com.example.demo.categoria.dto.CategoriaRegisterDTO;
-import com.example.demo.categoria.dto.CategoriaResponseDTO;
-import org.hibernate.annotations.Comment;
+import com.example.demo.categoria.dtos.CategoriaRegisterDTO;
+import com.example.demo.categoria.dtos.CategoriaResponseDTO;
 import org.springframework.stereotype.Component;
 
 @Component

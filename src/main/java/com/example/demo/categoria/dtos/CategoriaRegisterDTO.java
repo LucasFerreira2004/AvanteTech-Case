@@ -1,7 +1,6 @@
-package com.example.demo.categoria.dto;
+package com.example.demo.categoria.dtos;
 
 import jakarta.validation.constraints.NotBlank;
-import org.antlr.v4.runtime.misc.NotNull;
 
 public record CategoriaRegisterDTO(
         @NotBlank(message = "O nome nao pode ser vazio")

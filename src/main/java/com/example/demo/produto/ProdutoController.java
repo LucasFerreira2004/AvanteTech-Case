@@ -1,5 +1,6 @@
-package com.example.demo.categoria;
+package com.example.demo.produto;
 
+import com.example.demo.categoria.CategoriaService;
 import com.example.demo.categoria.dtos.CategoriaRegisterDTO;
 import com.example.demo.categoria.dtos.CategoriaResponseDTO;
 import jakarta.validation.Valid;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/categorias")
-public class CategoriaController {
+public class ProdutoController {
     @Autowired
     private CategoriaService categoriaService;
 
