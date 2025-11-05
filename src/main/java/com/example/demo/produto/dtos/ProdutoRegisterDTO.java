@@ -14,5 +14,4 @@ public record ProdutoRegisterDTO(
         BigDecimal preco,
         @NotNull(message = "o id da categoria nao pode ser vazio")
         Long categoriaId
-) {
-}
+) { }
