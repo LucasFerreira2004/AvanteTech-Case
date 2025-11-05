@@ -1,7 +1,7 @@
 version: "3.7"
 
 services:
-  yourmenu:
+  livo:
       build:
           context: ..
           dockerfile: docker/Dockerfile
@@ -17,7 +17,7 @@ services:
           - postgres
           - pgadmin
       networks:
-          - yourmenu-network
+          - livo-network
 
   postgres:
     image: postgres:14-alpine
@@ -28,7 +28,7 @@ services:
     volumes:
       - pgdata-staging:/var/lib/postgresql/data
     networks:
-      - yourmenu-network
+      - livo-network
 
   pgadmin:
     image: dpage/pgadmin4:latest
@@ -42,10 +42,10 @@ services:
     depends_on:
       - postgres
     networks:
-      - yourmenu-network
+      - livo-network
 
 networks:
-  yourmenu-network:
+  livo-network:
     driver: bridge
 
 volumes:

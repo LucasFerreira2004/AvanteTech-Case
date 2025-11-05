@@ -3,6 +3,8 @@ package com.example.demo.categoria;
 import com.example.demo.categoria.dtos.CategoriaRegisterDTO;
 import com.example.demo.categoria.dtos.CategoriaResponseDTO;
 import com.example.demo.categoria.mappers.CategoriaMapper;
+import com.example.demo.produto.ProdutoRepository;
+import com.example.demo.produto.ProdutoService;
 import com.example.demo.shared.globalExceptions.ResourceNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,8 @@ public class CategoriaService {
     private CategoriaMapper categoriaMapper;
     @Autowired
     private CategoriaValidationService categoriaValidationService;
+    @Autowired
+    private ProdutoService produtoService;
 
     public CategoriaResponseDTO save(CategoriaRegisterDTO dto) {
         Categoria categoria = categoriaMapper.toEntity(dto);
@@ -45,5 +49,6 @@ public class CategoriaService {
     public void softDelete(Long categoriaId) {
         categoriaValidationService.validateCategoriaExists(categoriaId);
         categoriaRepository.softDelete(categoriaId);
+        produtoService.softDeleteAllWithCategoriaId(categoriaId);
     }
 }

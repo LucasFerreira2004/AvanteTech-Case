@@ -33,5 +33,4 @@ public class Produto {
 
     @ManyToOne
     private Categoria categoria;
-
 }

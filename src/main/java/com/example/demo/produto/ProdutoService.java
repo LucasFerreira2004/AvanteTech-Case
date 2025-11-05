@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -53,5 +54,13 @@ public class ProdutoService {
     public void softDelete(Long produtoId) {
         produtoValidationService.validateProdutoExists(produtoId);
         produtoRepository.softDelete(produtoId);
+    }
+
+    @Transactional
+    public void softDeleteAllWithCategoriaId(Long categoriaId){
+        Optional<List<Produto>> produtos =  produtoRepository.findByCategoriaIdAndAtivoTrue(categoriaId);
+        if (produtos.isPresent()){
+            produtos.get().forEach(produto -> produtoRepository.softDelete(produto.getId()));
+        }
     }
 }
