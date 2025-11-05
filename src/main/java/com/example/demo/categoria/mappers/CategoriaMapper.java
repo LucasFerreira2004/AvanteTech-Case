@@ -12,6 +12,7 @@ public class CategoriaMapper {
         Categoria categoria = new Categoria();
         categoria.setDescricao(dto.descricao());
         categoria.setNome(dto.nome());
+        categoria.setAtivo(true);
         return categoria;
     }
 
@@ -20,6 +21,7 @@ public class CategoriaMapper {
         categoria.setId(id);
         categoria.setDescricao(dto.descricao());
         categoria.setNome(dto.nome());
+        categoria.setAtivo(true);
         return categoria;
     }
 

@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,15 +22,20 @@ public class CategoriaController {
         return ResponseEntity.ok(response);
     }
     @GetMapping
-    public ResponseEntity<Page<CategoriaResponseDTO>> findAllCategoria(Pageable pageable){
+    public ResponseEntity<PagedModel<CategoriaResponseDTO>> findAllCategoria(Pageable pageable){
         Page<CategoriaResponseDTO> page = categoriaService.findAll(pageable);
-        return  ResponseEntity.ok(page);
+        return ResponseEntity.ok( new PagedModel<>(page));
     }
 
     @PutMapping("/{categoriaId}")
     public ResponseEntity<CategoriaResponseDTO> updateCategoria(@RequestBody @Valid CategoriaRegisterDTO dto, @PathVariable Long categoriaId){
         CategoriaResponseDTO response = categoriaService.update(dto, categoriaId);
         return ResponseEntity.ok(response);
+    }
 
+    @DeleteMapping("/{categoriaId}")
+    public ResponseEntity<CategoriaResponseDTO> softDeleteCategoria(@PathVariable Long categoriaId){
+        categoriaService.softDelete(categoriaId);
+        return ResponseEntity.ok().build();
     }
 }

@@ -5,11 +5,14 @@ import com.example.demo.categoria.dto.CategoriaResponseDTO;
 import com.example.demo.categoria.mappers.CategoriaMapper;
 import com.example.demo.shared.globalExceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedModel;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -26,9 +29,11 @@ public class CategoriaService {
     }
 
     public Page<CategoriaResponseDTO> findAll(Pageable pageable) {
-        return categoriaRepository.findAll(pageable).map(x -> categoriaMapper.toResponseDto(x));
+        Page<CategoriaResponseDTO> page = categoriaRepository.findByAtivoTrue(pageable).map(x -> categoriaMapper.toResponseDto(x));
+        return page;
     }
 
+    @Transactional
     public CategoriaResponseDTO update(CategoriaRegisterDTO dto, Long categoriaId) {
         Optional<Categoria> categoria = categoriaRepository.findById(categoriaId);
         if (categoria.isEmpty()){
@@ -37,5 +42,14 @@ public class CategoriaService {
         Categoria categoriaUpdate = categoriaMapper.toEntity(dto, categoriaId);
         categoriaRepository.save(categoriaUpdate);
         return categoriaMapper.toResponseDto(categoriaUpdate);
+    }
+
+    @Transactional
+    public void softDelete(Long categoriaId) {
+        Optional<Categoria> categoria = categoriaRepository.findByIdAndAtivoTrue(categoriaId);
+        if (categoria.isEmpty()){
+            throw new ResourceNotFoundException("categoria");
+        }
+        categoriaRepository.softDelete(categoriaId);
     }
 }
