@@ -29,7 +29,7 @@ public class ProdutoService {
     private ProdutoValidationService produtoValidationService;
 
     public ProdutoResponseDTO save(ProdutoRegisterDTO dto) {
-        Categoria categoria = categoriaValidationService.validateCategoriaExistsAndGet(dto.categoriaId());
+        Categoria categoria = categoriaValidationService.validateCategoriaIsAtivaAndGet(dto.categoriaId());
         Produto produto = produtoMapper.toEntity(dto, categoria);
         produto = produtoRepository.save(produto);
         return  produtoMapper.toResponseDto(produto);
@@ -43,7 +43,7 @@ public class ProdutoService {
     @Transactional
     public ProdutoResponseDTO update(ProdutoRegisterDTO dto, Long produtoId) {
         produtoValidationService.validateProdutoExists(produtoId);
-        Categoria categoria = categoriaValidationService.validateCategoriaExistsAndGet(dto.categoriaId());
+        Categoria categoria = categoriaValidationService.validateCategoriaIsAtivaAndGet(dto.categoriaId());
 
         Produto produtoUpdate = produtoMapper.toEntity(dto, categoria, produtoId);
         produtoRepository.save(produtoUpdate);

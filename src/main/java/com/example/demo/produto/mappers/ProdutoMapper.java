@@ -14,8 +14,8 @@ import java.util.Locale;
 public class ProdutoMapper {
     public Produto toEntity(ProdutoRegisterDTO dto, Categoria categoria) {
         Produto produto = new Produto();
-        produto.setNome(dto.nome().toUpperCase(Locale.ROOT));
-        produto.setDescricao(dto.descricao().toUpperCase(Locale.ROOT));
+        produto.setNome(dto.nome().toLowerCase(Locale.ROOT));
+        produto.setDescricao(dto.descricao().toLowerCase(Locale.ROOT));
         produto.setPreco(dto.preco());
         produto.setCategoria(categoria);
         produto.setAtivo(true);

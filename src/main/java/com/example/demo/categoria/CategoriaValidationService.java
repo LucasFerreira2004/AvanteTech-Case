@@ -18,6 +18,12 @@ public class CategoriaValidationService {
         }
         return categoria.get();
     }
+    public Categoria validateCategoriaIsAtivaAndGet(Long categoriaId){
+        Categoria categoria = validateCategoriaExistsAndGet(categoriaId);
+        if (!categoria.getAtivo())
+            throw new ResourceNotFoundException("categoria");
+        return categoria;
+    }
     public void validateCategoriaExists(Long categoriaId){
         Optional<Categoria> categoria = categoriaRepository.findById(categoriaId);
         if (categoria.isEmpty()){
