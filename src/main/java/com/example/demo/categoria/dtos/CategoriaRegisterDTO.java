@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 public record CategoriaRegisterDTO(
         @NotBlank(message = "O nome nao pode ser vazio")
         String nome,
-        @NotBlank(message = "A descricao não pode ser vazia")
+        @NotBlank(message = "A descricao nao pode ser vazia")
         String descricao
 ) {
 }

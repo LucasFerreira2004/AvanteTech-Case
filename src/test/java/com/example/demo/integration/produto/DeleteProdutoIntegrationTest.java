@@ -85,9 +85,9 @@ public class DeleteProdutoIntegrationTest {
 
         mockMvc.perform(delete(PRODUTO_URL + "/" + produtoExistente.getId())
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isNotFound())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.field").value("produto"))
-                .andExpect(jsonPath("$.message").value("produto nao encontrado"));
+                .andExpect(jsonPath("$.message").value("recurso nao encontrado"));
     }
 }

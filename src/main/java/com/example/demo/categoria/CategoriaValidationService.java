@@ -24,6 +24,11 @@ public class CategoriaValidationService {
             throw new ResourceNotFoundException("categoria");
         return categoria;
     }
+    public void validateCategoriaIsAtiva(Long categoriaId){
+        Categoria categoria = validateCategoriaExistsAndGet(categoriaId);
+        if (!categoria.getAtivo())
+            throw new ResourceNotFoundException("categoria");
+    }
     public void validateCategoriaExists(Long categoriaId){
         Optional<Categoria> categoria = categoriaRepository.findById(categoriaId);
         if (categoria.isEmpty()){

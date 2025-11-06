@@ -42,7 +42,7 @@ public class ProdutoService {
 
     @Transactional
     public ProdutoResponseDTO update(ProdutoRegisterDTO dto, Long produtoId) {
-        produtoValidationService.validateProdutoExists(produtoId);
+        produtoValidationService.validateProdutoExistsAndIsAtivaAndGet(produtoId);
         Categoria categoria = categoriaValidationService.validateCategoriaIsAtivaAndGet(dto.categoriaId());
 
         Produto produtoUpdate = produtoMapper.toEntity(dto, categoria, produtoId);
@@ -52,7 +52,7 @@ public class ProdutoService {
 
     @Transactional
     public void softDelete(Long produtoId) {
-        produtoValidationService.validateProdutoExists(produtoId);
+        produtoValidationService.validateProdutoExistsAndIsAtivaAndGet(produtoId);
         produtoRepository.softDelete(produtoId);
     }
 

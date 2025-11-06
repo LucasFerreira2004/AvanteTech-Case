@@ -26,4 +26,11 @@ public class ProdutoValidationService {
             throw new ResourceNotFoundException("produto");
         }
     }
+
+    public Produto validateProdutoExistsAndIsAtivaAndGet(Long produtoId){
+        Produto  produto = validateProdutoExistsAndGet(produtoId);
+        if (!produto.getAtivo())
+            throw new ResourceNotFoundException("produto");
+        return produto;
+    }
 }

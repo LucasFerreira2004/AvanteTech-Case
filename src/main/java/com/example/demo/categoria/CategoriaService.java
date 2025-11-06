@@ -38,7 +38,7 @@ public class CategoriaService {
 
     @Transactional
     public CategoriaResponseDTO update(CategoriaRegisterDTO dto, Long categoriaId) {
-        categoriaValidationService.validateCategoriaExists(categoriaId);
+        categoriaValidationService.validateCategoriaIsAtiva(categoriaId);
 
         Categoria categoriaUpdate = categoriaMapper.toEntity(dto, categoriaId);
         categoriaRepository.save(categoriaUpdate);
@@ -47,7 +47,7 @@ public class CategoriaService {
 
     @Transactional
     public void softDelete(Long categoriaId) {
-        categoriaValidationService.validateCategoriaExists(categoriaId);
+        categoriaValidationService.validateCategoriaIsAtiva(categoriaId);
         categoriaRepository.softDelete(categoriaId);
         produtoService.softDeleteAllWithCategoriaId(categoriaId);
     }

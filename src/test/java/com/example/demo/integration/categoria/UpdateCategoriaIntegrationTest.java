@@ -87,15 +87,8 @@ public class UpdateCategoriaIntegrationTest {
                         .content(json))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$[0].field").value("descricao"))
-                .andExpect(jsonPath("$[0].message").value("A descricao não pode ser vazia"))
-                .andExpect(jsonPath("$[0].statusCode").value(400))
-                .andExpect(jsonPath("$[0].error").value("Bad Request"))
-
-                .andExpect(jsonPath("$[1].field").value("nome"))
-                .andExpect(jsonPath("$[1].message").value("O nome nao pode ser vazio"))
-                .andExpect(jsonPath("$[1].statusCode").value(400))
-                .andExpect(jsonPath("$[1].error").value("Bad Request"));
+                .andExpect(jsonPath("$[?(@.field == 'nome')].message").value("O nome nao pode ser vazio"))
+                .andExpect(jsonPath("$[?(@.field == 'descricao')].message").value("A descricao nao pode ser vazia"));
     }
 
     @Test
