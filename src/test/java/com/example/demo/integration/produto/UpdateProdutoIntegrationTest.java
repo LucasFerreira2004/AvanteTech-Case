@@ -1,5 +1,7 @@
 package com.example.demo.integration.produto;
 
+import com.example.demo.auth.dto.LoginEnterDTO;
+import com.example.demo.auth.tokens.TokenService;
 import com.example.demo.categoria.Categoria;
 import com.example.demo.categoria.CategoriaRepository;
 import com.example.demo.produto.Produto;
@@ -35,10 +37,14 @@ public class UpdateProdutoIntegrationTest {
     @Autowired
     private ProdutoRepository produtoRepository;
 
+    @Autowired
+    private TokenService tokenService;
+
     private static final String PRODUTO_URL = "/produtos";
 
     private Categoria categoriaAtiva;
     private Produto produtoExistente;
+    private String token;
 
     @BeforeEach
     void setup() {
@@ -55,6 +61,8 @@ public class UpdateProdutoIntegrationTest {
         produtoExistente.setAtivo(true);
         produtoExistente.setCategoria(categoriaAtiva);
         produtoRepository.save(produtoExistente);
+
+        token = tokenService.generateToken(new LoginEnterDTO("avante@email.com", "123"));
     }
 
     @Test
@@ -69,6 +77,7 @@ public class UpdateProdutoIntegrationTest {
         String json = objectMapper.writeValueAsString(updateDTO);
 
         mockMvc.perform(put(PRODUTO_URL + "/" + produtoExistente.getId())
+                        .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isOk())
@@ -92,6 +101,7 @@ public class UpdateProdutoIntegrationTest {
         String json = objectMapper.writeValueAsString(updateDTO);
 
         mockMvc.perform(put(PRODUTO_URL + "/100")
+                        .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isNotFound())
@@ -112,6 +122,7 @@ public class UpdateProdutoIntegrationTest {
         String json = objectMapper.writeValueAsString(updateDTO);
 
         mockMvc.perform(put(PRODUTO_URL + "/" + produtoExistente.getId())
+                        .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isNotFound())
@@ -132,11 +143,11 @@ public class UpdateProdutoIntegrationTest {
         String json = objectMapper.writeValueAsString(updateDTO);
 
         mockMvc.perform(put(PRODUTO_URL + "/" + produtoExistente.getId())
+                        .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-
                 .andExpect(jsonPath("$[?(@.field == 'nome')].message").value("O nome nao pode ser vazio"))
                 .andExpect(jsonPath("$[?(@.field == 'descricao')].message").value("A descricao nao pode ser vazia"))
                 .andExpect(jsonPath("$[?(@.field == 'preco')].message").value("o preco nao pode ser vazio"))

@@ -1,5 +1,7 @@
 package com.example.demo.integration.produto;
 
+import com.example.demo.auth.dto.LoginEnterDTO;
+import com.example.demo.auth.tokens.TokenService;
 import com.example.demo.categoria.Categoria;
 import com.example.demo.categoria.CategoriaRepository;
 import com.example.demo.produto.dtos.ProdutoRegisterDTO;
@@ -32,17 +34,27 @@ public class SaveProdutoIntegrationTest {
     @Autowired
     private CategoriaRepository categoriaRepository;
 
+    @Autowired
+    private TokenService tokenService;
+
     private static final String PRODUTO_URL = "/produtos";
 
     private Categoria categoria;
+    private String token;
+    private LoginEnterDTO loginEnterDTO;
+
 
     @BeforeEach
     void setup() {
+        loginEnterDTO = new LoginEnterDTO("avante@gmail.com", "123");
+        token = tokenService.generateToken(loginEnterDTO);
+
         categoria = new Categoria();
         categoria.setNome("comidas");
         categoria.setDescricao("belas comidas");
         categoria.setAtivo(true);
         categoriaRepository.save(categoria);
+
     }
 
     @Test
@@ -56,11 +68,11 @@ public class SaveProdutoIntegrationTest {
         String json = objectMapper.writeValueAsString(registerDTO);
 
         mockMvc.perform(post(PRODUTO_URL)
+                        .header("Authorization", "Bearer " + token) // ✅ adiciona token
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                // ✅ Verifica se os campos retornam corretamente
                 .andExpect(jsonPath("$.id").exists())
                 .andExpect(jsonPath("$.nome").value("hambúrguer"))
                 .andExpect(jsonPath("$.descricao").value("delicioso hambúrguer"))
@@ -80,23 +92,19 @@ public class SaveProdutoIntegrationTest {
         String json = objectMapper.writeValueAsString(registerDTO);
 
         mockMvc.perform(post(PRODUTO_URL)
+                        .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$[?(@.field == 'nome')].message").value("O nome nao pode ser vazio"))
                 .andExpect(jsonPath("$[?(@.field == 'nome')].statusCode").value(400))
-
                 .andExpect(jsonPath("$[?(@.field == 'descricao')].message").value("A descricao nao pode ser vazia"))
                 .andExpect(jsonPath("$[?(@.field == 'descricao')].statusCode").value(400))
-
                 .andExpect(jsonPath("$[?(@.field == 'preco')].message").value("o preco nao pode ser vazio"))
                 .andExpect(jsonPath("$[?(@.field == 'preco')].statusCode").value(400))
-
                 .andExpect(jsonPath("$[?(@.field == 'categoriaId')].message").value("o id da categoria nao pode ser vazio"))
                 .andExpect(jsonPath("$[?(@.field == 'categoriaId')].statusCode").value(400));
-
-
     }
 
     @Test
@@ -111,6 +119,7 @@ public class SaveProdutoIntegrationTest {
         String json = objectMapper.writeValueAsString(registerDTO);
 
         mockMvc.perform(post(PRODUTO_URL)
+                        .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isNotFound())
@@ -137,6 +146,7 @@ public class SaveProdutoIntegrationTest {
         String json = objectMapper.writeValueAsString(registerDTO);
 
         mockMvc.perform(post(PRODUTO_URL)
+                        .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isNotFound())

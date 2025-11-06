@@ -1,10 +1,11 @@
 package com.example.demo.integration.produto;
 
+import com.example.demo.auth.dto.LoginEnterDTO;
+import com.example.demo.auth.tokens.TokenService;
 import com.example.demo.categoria.Categoria;
 import com.example.demo.categoria.CategoriaRepository;
 import com.example.demo.produto.Produto;
 import com.example.demo.produto.ProdutoRepository;
-import com.example.demo.produto.dtos.ProdutoRegisterDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,7 +19,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.math.BigDecimal;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -38,13 +38,21 @@ public class DeleteProdutoIntegrationTest {
     @Autowired
     private ProdutoRepository produtoRepository;
 
+    @Autowired
+    private TokenService tokenService;
+
     private static final String PRODUTO_URL = "/produtos";
 
     private Categoria categoriaAtiva;
     private Produto produtoExistente;
+    private String token;
+    private LoginEnterDTO loginEnterDTO;
 
     @BeforeEach
     void setup() {
+        loginEnterDTO = new LoginEnterDTO("avante@gmail.com", "123");
+        token = tokenService.generateToken(loginEnterDTO);
+
         categoriaAtiva = new Categoria();
         categoriaAtiva.setNome("bebidas");
         categoriaAtiva.setDescricao("bebidas refrescantes");
@@ -63,6 +71,7 @@ public class DeleteProdutoIntegrationTest {
     @Test
     void ShouldSoftDeleteProdutoSuccessfully() throws Exception {
         mockMvc.perform(delete(PRODUTO_URL + "/" + produtoExistente.getId())
+                        .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
@@ -70,6 +79,7 @@ public class DeleteProdutoIntegrationTest {
     @Test
     void ShouldThrowExceptionWhenProdutoNotFound() throws Exception {
         mockMvc.perform(delete(PRODUTO_URL + "/100")
+                        .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -79,11 +89,11 @@ public class DeleteProdutoIntegrationTest {
 
     @Test
     void ShouldThrowExceptionWhenProdutoAlreadyInactive() throws Exception {
-        // Inativa o produto
         produtoExistente.setAtivo(false);
         produtoRepository.save(produtoExistente);
 
         mockMvc.perform(delete(PRODUTO_URL + "/" + produtoExistente.getId())
+                        .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
