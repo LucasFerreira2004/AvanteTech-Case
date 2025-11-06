@@ -8,8 +8,11 @@ import com.example.demo.produto.dtos.ProdutoRegisterDTO;
 import com.example.demo.produto.dtos.ProdutoResponseDTO;
 import com.example.demo.produto.mappers.ProdutoMapper;
 import com.example.demo.shared.globalExceptions.ResourceNotFoundException;
+
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -28,6 +31,7 @@ public class ProdutoService {
     @Autowired
     private ProdutoValidationService produtoValidationService;
 
+    @CacheEvict(value = "produtos", allEntries = true)
     public ProdutoResponseDTO save(ProdutoRegisterDTO dto) {
         Categoria categoria = categoriaValidationService.validateCategoriaIsAtivaAndGet(dto.categoriaId());
         Produto produto = produtoMapper.toEntity(dto, categoria);
@@ -35,12 +39,14 @@ public class ProdutoService {
         return  produtoMapper.toResponseDto(produto);
     }
 
+    @Cacheable(value = "produtos")
     public Page<ProdutoResponseDTO> findAll(Pageable pageable) {
         Page<ProdutoResponseDTO> page = produtoRepository.findByAtivoTrue(pageable).map(x -> produtoMapper.toResponseDto(x));
         return page;
     }
 
     @Transactional
+    @CacheEvict(value = "produtos", allEntries = true)
     public ProdutoResponseDTO update(ProdutoRegisterDTO dto, Long produtoId) {
         produtoValidationService.validateProdutoExistsAndIsAtivaAndGet(produtoId);
         Categoria categoria = categoriaValidationService.validateCategoriaIsAtivaAndGet(dto.categoriaId());
@@ -51,12 +57,14 @@ public class ProdutoService {
     }
 
     @Transactional
+    @CacheEvict(value = "produtos", allEntries = true)
     public void softDelete(Long produtoId) {
         produtoValidationService.validateProdutoExistsAndIsAtivaAndGet(produtoId);
         produtoRepository.softDelete(produtoId);
     }
 
     @Transactional
+    @CacheEvict(value = "produtos", allEntries = true)
     public void softDeleteAllWithCategoriaId(Long categoriaId){
         Optional<List<Produto>> produtos =  produtoRepository.findByCategoriaIdAndAtivoTrue(categoriaId);
         if (produtos.isPresent()){

@@ -8,6 +8,7 @@ import com.example.demo.produto.ProdutoService;
 import com.example.demo.shared.globalExceptions.ResourceNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -46,6 +47,7 @@ public class CategoriaService {
     }
 
     @Transactional
+    @CacheEvict(value = "produtos", allEntries = true)
     public void softDelete(Long categoriaId) {
         categoriaValidationService.validateCategoriaIsAtiva(categoriaId);
         categoriaRepository.softDelete(categoriaId);
